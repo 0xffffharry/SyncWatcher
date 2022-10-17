@@ -1,0 +1,12 @@
+{
+  "watcher": [
+    {
+      "path": "C:\\Users\\Admin\\Desktop\\Netch",
+      "script": [
+        {
+          "name": "/path/to/script"
+        }
+      ]
+    }
+  ]
+}

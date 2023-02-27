@@ -1,0 +1,8 @@
+{
+  "watcher": {
+    "path": "/tmp",
+    "mode": "exclude",
+    "rule": "^tmp.*",
+    "script": "echo ok"
+  }
+}

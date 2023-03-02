@@ -150,7 +150,7 @@ func (w *Watcher) RunWithContext(ctx context.Context, logger *log.Logger) {
 	if w.firstRun {
 		w.logger.Info("watcher", fmt.Sprintf("first script run"))
 		for _, s := range w.script {
-			ctx, cancel := context.WithTimeout(w.ctx, 10*time.Second)
+			ctx, cancel := context.WithCancel(w.ctx)
 			s = s.Clone()
 			s.SetEnv("syncdir", w.path)
 			_, _, err := s.RunWithContext(ctx)
@@ -206,7 +206,7 @@ func (w *Watcher) call() {
 			w.callValue.Store(false)
 			w.logger.Info("watcher", fmt.Sprintf("run script"))
 			for _, s := range w.script {
-				ctx, cancel := context.WithTimeout(w.ctx, 10*time.Second)
+				ctx, cancel := context.WithCancel(w.ctx)
 				s = s.Clone()
 				s.SetEnv("syncdir", w.path)
 				_, _, err := s.RunWithContext(ctx)

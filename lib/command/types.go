@@ -1,6 +1,9 @@
 package command
 
+import "time"
+
 type Command struct {
-	Name string
-	Env  []string
+	Name    string
+	Timeout time.Duration
+	Env     []string
 }

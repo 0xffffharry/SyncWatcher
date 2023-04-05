@@ -68,10 +68,10 @@ func New(watcher *config.ConfigWatcher) (*Watcher, error) {
 	} else {
 		w.script = make([]*command.Command, 0)
 		for _, s := range watcher.Script {
-			if s == "" {
+			if s.Path == "" {
 				return nil, fmt.Errorf("script command is empty")
 			}
-			w.script = append(w.script, command.New(s))
+			w.script = append(w.script, command.New(s.Path, time.Duration(s.Timeout)))
 		}
 	}
 	return w, nil
@@ -150,11 +150,9 @@ func (w *Watcher) RunWithContext(ctx context.Context, logger *log.Logger) {
 	if w.firstRun {
 		w.logger.Info("watcher", fmt.Sprintf("first script run"))
 		for _, s := range w.script {
-			ctx, cancel := context.WithCancel(w.ctx)
 			s = s.Clone()
 			s.SetEnv("syncdir", w.path)
-			_, _, err := s.RunWithContext(ctx)
-			cancel()
+			_, _, err := s.RunWithContext(w.ctx)
 			if err != nil {
 				logger.Error("watcher", fmt.Sprintf("run script `%s` failed: %s", s.String(), err))
 			} else {
@@ -206,11 +204,9 @@ func (w *Watcher) call() {
 			w.callValue.Store(false)
 			w.logger.Info("watcher", fmt.Sprintf("run script"))
 			for _, s := range w.script {
-				ctx, cancel := context.WithCancel(w.ctx)
 				s = s.Clone()
 				s.SetEnv("syncdir", w.path)
-				_, _, err := s.RunWithContext(ctx)
-				cancel()
+				_, _, err := s.RunWithContext(w.ctx)
 				if err != nil {
 					w.logger.Error("watcher", fmt.Sprintf("run script `%s` failed: %s", s.String(), err))
 				} else {

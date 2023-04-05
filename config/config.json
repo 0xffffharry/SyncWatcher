@@ -3,6 +3,9 @@
     "path": "/tmp",
     "mode": "exclude",
     "rule": "^tmp.*",
-    "script": "echo ok"
+    "script": {
+      "path": "echo ok",
+      "timeout": "1h"
+    }
   }
 }

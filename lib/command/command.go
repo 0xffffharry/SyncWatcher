@@ -6,18 +6,21 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+	"time"
 )
 
-func New(name string) *Command {
+func New(name string, timeout time.Duration) *Command {
 	return &Command{
-		Name: name,
+		Name:    name,
+		Timeout: timeout,
 	}
 }
 
 func (c *Command) Clone() *Command {
 	return &Command{
-		Name: c.Name,
-		Env:  c.Env,
+		Name:    c.Name,
+		Timeout: c.Timeout,
+		Env:     c.Env,
 	}
 }
 
@@ -44,6 +47,8 @@ func (c *Command) Run() ([]byte, []byte, error) {
 
 func (c *Command) RunWithContext(ctx context.Context) ([]byte, []byte, error) {
 	lineSlice := strings.SplitN(c.Name, " ", 2)
+	ctx, cancel := context.WithTimeout(ctx, c.Timeout)
+	defer cancel()
 	cmd := exec.CommandContext(ctx, lineSlice[0], lineSlice[1:]...)
 	var (
 		stdOutput = bytes.NewBuffer(nil)

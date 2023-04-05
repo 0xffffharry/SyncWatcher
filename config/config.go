@@ -16,13 +16,18 @@ type ConfigLog struct {
 	Debug bool   `json:"debug,omitempty"`
 }
 
+type ConfigScript struct {
+	Path    string         `json:"path,omitempty"`
+	Timeout types.Duration `json:"timeout,omitempty"`
+}
+
 type ConfigWatcher struct {
-	Path     string                 `json:"path,omitempty"`
-	Monitor  types.Listable[string] `json:"monitor,omitempty"`
-	FirstRun bool                   `json:"first-run,omitempty"`
-	Mode     string                 `json:"mode,omitempty"`
-	Rule     types.Listable[string] `json:"rule,omitempty"`
-	Script   types.Listable[string] `json:"script,omitempty"`
+	Path     string                       `json:"path,omitempty"`
+	Monitor  types.Listable[string]       `json:"monitor,omitempty"`
+	FirstRun bool                         `json:"first-run,omitempty"`
+	Mode     string                       `json:"mode,omitempty"`
+	Rule     types.Listable[string]       `json:"rule,omitempty"`
+	Script   types.Listable[ConfigScript] `json:"script,omitempty"`
 }
 
 type _config Config
